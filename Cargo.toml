@@ -1,0 +1,10 @@
+[package]
+name = "slmp-rs"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+authors = ["brkp <brkp@tutanota.com>"]
+repository = "https://github.com/brkp/slmp-rs"
+description = "Pure Rust SLMP client crate"
+
+[dependencies]
