@@ -3,7 +3,7 @@ use num_traits::{FromPrimitive, ToPrimitive};
 
 /// TODO: docs
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Primitive)]
-pub enum SLMPEndCode {
+pub enum EndCode {
     Success = 0x00,
     WrongCommand = 0xC059,
     WrongFormat = 0xC05C,
@@ -36,7 +36,7 @@ pub enum SLMPEndCode {
     DataFragmentNotSupport = 0xCF44,
 }
 
-impl std::fmt::Display for SLMPEndCode {
+impl std::fmt::Display for EndCode {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{:?}", self)
     }

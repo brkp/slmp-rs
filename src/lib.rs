@@ -12,7 +12,7 @@ mod types;
 pub use client::client::Config;
 pub use types::{
     device::{Device, DeviceType},
-    end_code::SLMPEndCode,
+    end_code::EndCode,
     header::Header,
 };
 
@@ -22,7 +22,7 @@ use std::{fmt, io};
 #[derive(Debug)]
 pub enum Error {
     Io(std::io::Error),
-    SLMPError(SLMPEndCode),
+    SLMPError(EndCode),
     CustomError(String),
 }
 
