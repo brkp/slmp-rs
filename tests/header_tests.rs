@@ -1,12 +1,12 @@
-use slmp;
+use slmp::Header;
 
 #[test]
 fn test_header_build() {
     let mut buf1 = Vec::new();
     let mut buf2 = Vec::new();
 
-    let hdr1 = slmp::Header::default();
-    let hdr2 = slmp::Header {
+    let hdr1 = Header::default();
+    let hdr2 = Header {
         serial_no: Some(0x1234),
         dst_ne_no: 0xde,
         dst_st_no: 0xad,
@@ -26,9 +26,9 @@ fn test_header_from() {
     let buf1 = [0xd0, 0x00, 0x00, 0xff, 0xff, 0x03, 0x00];
     let buf2 = [0xd4, 0x00, 0x34, 0x12, 0x00, 0x00, 0xde, 0xad, 0xbe, 0xef, 0xee];
 
-    assert!(slmp::Header::from(&buf1).is_ok());
-    assert!(slmp::Header::from(&buf2).is_ok());
+    assert!(Header::from(&buf1).is_ok());
+    assert!(Header::from(&buf2).is_ok());
 
-    assert!(slmp::Header::from(&[]).is_err());
-    assert!(slmp::Header::from(&[0xd0, 0x00]).is_err());
+    assert!(Header::from(&[]).is_err());
+    assert!(Header::from(&[0xd0, 0x00]).is_err());
 }
