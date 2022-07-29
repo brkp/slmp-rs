@@ -8,3 +8,5 @@ repository = "https://github.com/brkp/slmp-rs"
 description = "Pure Rust SLMP client crate"
 
 [dependencies]
+enum-primitive-derive = "0.2.2"
+num-traits = "0.2.15"
