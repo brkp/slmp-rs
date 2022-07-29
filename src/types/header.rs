@@ -1,12 +1,18 @@
 use crate::Result;
 
-/// TODO: docs
+/// Shared data between a `Request` and a `Response`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Header {
+    /// Encodes the `Subheader` part of a `Request`/`Response`.
+    /// The `Subheader` differs depending on whether or not a serial no. is added.
     pub serial_no: Option<u16>,
+    /// Request destination network No.
     pub dst_ne_no: u8,
+    /// Request destination station No.
     pub dst_st_no: u8,
+    /// Request destination module I/O No.
     pub dst_md_no: u16,
+    /// Request destination multidrop station No.
     pub dst_mt_no: u8,
 }
 
@@ -23,6 +29,7 @@ impl Default for Header {
 }
 
 impl Header {
+    /// Write each `Header` field into some `&mut Vec<u8>` buffer in little endian.
     pub fn build(&self, buf: &mut Vec<u8>) {
         match self.serial_no {
             None => buf.extend_from_slice(&[0x50, 00]),
@@ -37,6 +44,7 @@ impl Header {
         buf.push(self.dst_mt_no);
     }
 
+    /// Build a `Header` from some `&[u8]` buffer.
     pub fn from(buf: &[u8]) -> Result<Self> {
         match buf.get(0) {
             Some(n) if *n == 0xd0 && buf.len() != 0x7 => return Err("invalid buffer".into()),
