@@ -32,6 +32,12 @@ impl From<io::Error> for Error {
     }
 }
 
+impl From<&str> for Error {
+    fn from(string: &str) -> Self {
+        Self::CustomError(string.to_string())
+    }
+}
+
 impl std::fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         use Error::*;
