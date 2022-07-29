@@ -36,6 +36,20 @@ impl Header {
     }
 
     pub fn from(buf: &[u8]) -> Self {
-        todo!()
+        let mut header = Self::default();
+        let mut index;
+
+        match buf[0] {
+            0xd0 => { index = 2; header.serial_no = None; },
+            0xd4 => { index = 6; header.serial_no = Some(u16::from_le_bytes([buf[2], buf[3]])); }
+            _    => unreachable!()
+        }
+
+        header.dst_ne_no = buf[index]; index += 1;
+        header.dst_st_no = buf[index]; index += 1;
+        header.dst_md_no = u16::from_le_bytes([buf[index], buf[index + 1]]); index += 2;
+        header.dst_mt_no = buf[index];
+
+        header
     }
 }
