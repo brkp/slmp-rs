@@ -5,14 +5,18 @@
 
 //! TODO: docs
 
-mod types;
 mod client;
 mod command;
+mod types;
 
 pub use client::client::Config;
-pub use types::{device::{Device, DeviceType}, end_code::SLMPEndCode};
+pub use types::{
+    device::{Device, DeviceType},
+    end_code::SLMPEndCode,
+    header::Header,
+};
 
-use std::{io, fmt};
+use std::{fmt, io};
 
 /// TODO: docs
 #[derive(Debug)]
@@ -35,7 +39,7 @@ impl std::fmt::Display for Error {
         match self {
             Io(ref err) => write!(f, "I/O error: {}", err),
             SLMPError(err) => write!(f, "SLMP error: {}", err),
-            CustomError(err) => write!(f, "slmp-rs error: {}", err)
+            CustomError(err) => write!(f, "slmp-rs error: {}", err),
         }
     }
 }
@@ -61,14 +65,3 @@ impl std::error::Error for Error {
 
 /// TODO: docs
 pub type Result<T> = std::result::Result<T, Error>;
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use num_traits::FromPrimitive;
-
-    #[test]
-    fn it_works() {
-        assert_eq!(SLMPEndCode::from_u16(0x0000), Some(SLMPEndCode::Success));
-    }
-}

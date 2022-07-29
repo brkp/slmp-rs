@@ -1,10 +1,11 @@
-#[derive(Debug, Clone, Copy)]
+/// TODO: docs
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Header {
-    serial_no: Option<u16>,
-    dst_ne_no: u8,
-    dst_st_no: u8,
-    dst_md_no: u16,
-    dst_mt_no: u8,
+    pub serial_no: Option<u16>,
+    pub dst_ne_no: u8,
+    pub dst_st_no: u8,
+    pub dst_md_no: u16,
+    pub dst_mt_no: u8,
 }
 
 impl Default for Header {
@@ -20,11 +21,21 @@ impl Default for Header {
 }
 
 impl Header {
-    fn build(&self, buf: &mut Vec<u8>) {
-        todo!()
+    pub fn build(&self, buf: &mut Vec<u8>) {
+        match self.serial_no {
+            None => buf.extend_from_slice(&[0x50, 00]),
+            Some(u) => {
+                buf.extend_from_slice(&[0x54, 0x00]);
+                buf.extend_from_slice(&u.to_le_bytes());
+                buf.extend_from_slice(&[0x00, 0x00]);
+            }
+        }
+        buf.extend_from_slice(&[self.dst_ne_no, self.dst_st_no]);
+        buf.extend_from_slice(&self.dst_md_no.to_le_bytes());
+        buf.push(self.dst_mt_no);
     }
 
-    fn from(&self, data: &[u8]) -> Self {
+    pub fn from(buf: &[u8]) -> Self {
         todo!()
     }
 }
