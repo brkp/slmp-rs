@@ -1,3 +1,5 @@
+use crate::Result;
+
 /// TODO: docs
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Header {
@@ -35,7 +37,14 @@ impl Header {
         buf.push(self.dst_mt_no);
     }
 
-    pub fn from(buf: &[u8]) -> Self {
+    pub fn from(buf: &[u8]) -> Result<Self> {
+        match buf.get(0) {
+            Some(n) if *n == 0xd0 && buf.len() != 0x7 => return Err("invalid buffer".into()),
+            Some(n) if *n == 0xd4 && buf.len() != 0xb => return Err("invalid buffer".into()),
+            None                                      => return Err("invalid buffer".into()),
+            _ => (),
+        }
+
         let mut header = Self::default();
         let mut index;
 
@@ -50,6 +59,6 @@ impl Header {
         header.dst_md_no = u16::from_le_bytes([buf[index], buf[index + 1]]); index += 2;
         header.dst_mt_no = buf[index];
 
-        header
+        Ok(header)
     }
 }

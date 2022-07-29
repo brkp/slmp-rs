@@ -26,18 +26,9 @@ fn test_header_from() {
     let buf1 = [0xd0, 0x00, 0x00, 0xff, 0xff, 0x03, 0x00];
     let buf2 = [0xd4, 0x00, 0x34, 0x12, 0x00, 0x00, 0xde, 0xad, 0xbe, 0xef, 0xee];
 
-    let hdr1 = slmp::Header::from(&buf1);
-    let hdr2 = slmp::Header::from(&buf2);
+    assert!(slmp::Header::from(&buf1).is_ok());
+    assert!(slmp::Header::from(&buf2).is_ok());
 
-    assert_eq!(hdr1, slmp::Header::default());
-    assert_eq!(
-        hdr2,
-        slmp::Header {
-            serial_no: Some(0x1234),
-            dst_ne_no: 0xde,
-            dst_st_no: 0xad,
-            dst_md_no: 0xefbe,
-            dst_mt_no: 0xee,
-        }
-    );
+    assert!(slmp::Header::from(&[]).is_err());
+    assert!(slmp::Header::from(&[0xd0, 0x00]).is_err());
 }
