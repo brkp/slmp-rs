@@ -1,6 +1,7 @@
 use enum_primitive_derive::Primitive;
 use num_traits::{FromPrimitive, ToPrimitive};
 
+/// TODO: docs
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Primitive)]
 pub enum SLMPEndCode {
     Success = 0x00,

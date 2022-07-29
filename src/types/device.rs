@@ -1,3 +1,4 @@
+/// TODO: docs
 #[derive(Debug, Clone, Copy)]
 pub enum DeviceType {
     Bit,
@@ -5,6 +6,7 @@ pub enum DeviceType {
     DoubleWord,
 }
 
+/// TODO: docs
 #[derive(Debug, Clone, Copy)]
 pub enum Device {
     SM   = 0x0091,

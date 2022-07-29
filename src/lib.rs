@@ -3,14 +3,18 @@
     unused_imports,
     unused_variables)]
 
+//! TODO: docs
+
 mod types;
 mod client;
 mod command;
 
+pub use client::client::Config;
 pub use types::{device::{Device, DeviceType}, end_code::SLMPEndCode};
 
 use std::{io, fmt};
 
+/// TODO: docs
 #[derive(Debug)]
 pub enum Error {
     Io(std::io::Error),
@@ -55,6 +59,7 @@ impl std::error::Error for Error {
     }
 }
 
+/// TODO: docs
 pub type Result<T> = std::result::Result<T, Error>;
 
 #[cfg(test)]
