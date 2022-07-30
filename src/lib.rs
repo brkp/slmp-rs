@@ -5,19 +5,21 @@
 
 //! TODO: docs
 
-mod client;
-mod command;
-mod types;
+/// TCP client related code.
+pub mod client;
+/// Functionality related to building/decoding SLMP commands.
+pub mod command;
+/// A set of SLMP related type definitons.
+pub mod types;
 
-pub use client::client::Config;
-pub use types::{
+use std::{fmt, io};
+use crate::client::client::Config;
+use crate::types::{
     cmd::Command,
     device::{Device, DeviceType},
     end_code::EndCode,
     header::Header,
 };
-
-use std::{fmt, io};
 
 /// TODO: docs
 #[derive(Debug)]
@@ -73,5 +75,16 @@ impl std::error::Error for Error {
     }
 }
 
-/// TODO: docs
+/// Type alias for `Result<T, slmp::Error>`.
 pub type Result<T> = std::result::Result<T, Error>;
+
+/// Convenience re-export of common members.
+pub mod prelude {
+    pub use crate::client::client::Config;
+    pub use crate::types::{
+        cmd::Command,
+        device::{Device, DeviceType},
+        end_code::EndCode,
+        header::Header,
+    };
+}
