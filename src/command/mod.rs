@@ -1,3 +1,7 @@
+// TODO: figure out how to properly do the subcommand stuff
+// right now they're literally hardcoded
+// which would cause problems with different PLCs
+
 pub mod device;
 
 /// A closure with the type `CmdFn` is returned from each command generator
