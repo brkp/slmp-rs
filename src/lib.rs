@@ -11,6 +11,7 @@ mod types;
 
 pub use client::client::Config;
 pub use types::{
+    cmd::Command,
     device::{Device, DeviceType},
     end_code::EndCode,
     header::Header,
