@@ -3,8 +3,27 @@
 // which would cause problems with different PLCs
 
 pub mod device;
+use crate::Result;
 
-/// A closure with the type `CmdFn` is returned from each command generator
-/// function so that some other function can call this closure to build the
-/// command data in-place, without knowing anything about the command.
-pub type CmdFn = Box<dyn Fn(&mut Vec<u8>) -> usize>;
+macro_rules! command {
+    ($name:ident, $($fname:ident : $ftype:ty),*) => {
+        #[derive(Debug)]
+        pub struct $name {
+            $(pub $fname : $ftype),*
+        }
+
+        impl $name {
+            pub fn new($($fname : $ftype),*) -> Self {
+                Self { $($fname),* }
+            }
+        }
+    };
+}
+pub(crate) use command;
+
+/// Every `*Cmd` needs to implement this in order for the `Request`
+/// structure to be able to generate a request payload.
+pub trait Cmd<T> {
+    fn decode(buf: &mut Vec<u8>) -> Result<T>;
+    fn encode(&self, buf: &mut Vec<u8>);
+}
