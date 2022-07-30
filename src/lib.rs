@@ -23,6 +23,7 @@ use std::{fmt, io};
 #[derive(Debug)]
 pub enum Error {
     Io(std::io::Error),
+    InvalidDevice,
     SLMPError(EndCode),
     CustomError(String),
 }
@@ -45,6 +46,7 @@ impl std::fmt::Display for Error {
 
         match self {
             Io(ref err) => write!(f, "I/O error: {}", err),
+            InvalidDevice => write!(f, "InvalidDevice"),
             SLMPError(err) => write!(f, "SLMP error: {}", err),
             CustomError(err) => write!(f, "slmp-rs error: {}", err),
         }
@@ -64,6 +66,7 @@ impl std::error::Error for Error {
 
         match self {
             Io(_) => "I/O error",
+            InvalidDevice => "Invalid device specified",
             SLMPError(_) => "SLMP error",
             CustomError(_) => "slmp-rs error",
         }
