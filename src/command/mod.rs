@@ -6,14 +6,14 @@ pub mod device;
 use crate::Result;
 
 macro_rules! command {
-    ($name:ident, $($fname:ident : $ftype:ty),*) => {
+    (struct $name:ident, $($fname:ident : $ftype:ty),*) => {
         #[derive(Debug)]
         pub struct $name {
             $(pub $fname : $ftype),*
         }
 
         impl $name {
-            pub fn new($($fname : $ftype),*) -> Self {
+            fn generate($($fname : $ftype),*) -> Self {
                 Self { $($fname),* }
             }
         }
