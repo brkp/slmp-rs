@@ -24,6 +24,5 @@ pub(crate) use command;
 /// Every `*Cmd` needs to implement this in order for the `Request`
 /// structure to be able to generate a request payload.
 pub trait Cmd<T> {
-    fn decode(buf: &mut Vec<u8>) -> Result<T>;
-    fn encode(&self, buf: &mut Vec<u8>);
+    fn decode(&self, buf: &[u8]) -> Result<T>;
 }
