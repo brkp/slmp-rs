@@ -1,11 +1,10 @@
-use crate::command::{command, Cmd};
+use crate::command::{make_cmd, CmdDecode, CmdEncode};
 use crate::{Command, Device, DeviceType, Error, Result};
 
-command!(struct ReadCmd, device: Device, addr: u16, count: u16);
-// Write doesn't need to decode anything
-command!(struct WriteCmd, device: Device, addr: u16, len: u16, data: Vec<u8>);
+make_cmd!(struct ReadCmd, device: Device, addr: u16, count: u16);
+make_cmd!(struct WriteCmd, device: Device, addr: u16, len: u16, data: Vec<u8>);
 
-impl ReadCmd {
+impl CmdEncode for ReadCmd {
     fn encode(&self, buf: &mut Vec<u8>) -> usize {
         let cmd = Command::DeviceRead as u16;
         let sub = match self.device.get_type() {
@@ -25,7 +24,37 @@ impl ReadCmd {
     }
 }
 
-impl WriteCmd {
+impl CmdDecode<Vec<u16>> for ReadCmd {
+    fn decode(&self, buf: &[u8]) -> Result<Vec<u16>> {
+        // `buf` must have an even length
+        if buf.len() % 2 != 0 {
+            return Err("invalid buffer".into());
+        }
+
+        Ok(buf
+            .chunks_exact(2)
+            .into_iter()
+            .map(|a| u16::from_le_bytes([a[0], a[1]]))
+            .collect())
+    }
+}
+
+impl CmdDecode<Vec<bool>> for ReadCmd {
+    fn decode(&self, buf: &[u8]) -> Result<Vec<bool>> {
+        let data = buf
+            .into_iter()
+            .flat_map(|n| [(*n & 0x10) != 0, (*n & 1) != 0])
+            .collect::<Vec<bool>>();
+
+        if data.len() < self.count as usize {
+            return Err("invalid buffer".into());
+        }
+
+        Ok(data[..self.count as usize].to_vec())
+    }
+}
+
+impl CmdEncode for WriteCmd {
     fn encode(&self, buf: &mut Vec<u8>) -> usize {
         let cmd = Command::DeviceWrite as u16;
         let sub = match self.device.get_type() {
@@ -46,35 +75,6 @@ impl WriteCmd {
     }
 }
 
-impl Cmd<Vec<bool>> for ReadCmd {
-    fn decode(&self, buf: &[u8]) -> Result<Vec<bool>> {
-        let data = buf
-            .into_iter()
-            .flat_map(|n| [(*n & 0x10) != 0, (*n & 1) != 0])
-            .collect::<Vec<bool>>();
-
-        if data.len() < self.count as usize {
-            return Err("invalid buffer".into());
-        }
-
-        Ok(data[..self.count as usize].to_vec())
-    }
-}
-
-impl Cmd<Vec<u16>> for ReadCmd {
-    fn decode(&self, buf: &[u8]) -> Result<Vec<u16>> {
-        // `buf` must have an even length
-        if buf.len() % 2 != 0 {
-            return Err("invalid buffer".into());
-        }
-
-        Ok(buf
-            .chunks_exact(2)
-            .into_iter()
-            .map(|a| u16::from_le_bytes([a[0], a[1]]))
-            .collect())
-    }
-}
 #[cfg(test)]
 mod tests {
     use super::*;
